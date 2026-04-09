@@ -420,11 +420,57 @@
       justify-content: center;
     }
 
-    video {
+    .news-channel-header {
+      display: grid;
+      grid-template-columns: 36px 1fr 36px;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .channel-title-wrap {
+      min-width: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .channel-nav-btn {
+      width: 32px;
+      height: 32px;
+      border: 1px solid rgba(67,243,255,0.22);
+      border-radius: 999px;
+      background: rgba(6,16,26,0.95);
+      color: #d9efff;
+      font-size: 16px;
+      line-height: 1;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      transition: 0.18s ease;
+    }
+
+    .channel-nav-btn:hover {
+      border-color: rgba(67,243,255,0.45);
+      background: var(--cyan);
+      color: #051019;
+    }
+
+    #newsChannelTitle {
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      text-align: center;
+    }
+
+    video,
+    .live-news-embed {
       width: 100%;
       height: 100%;
       object-fit: contain;
       background: #000;
+      border: 0;
+      display: block;
     }
 
     .video-overlay {
@@ -724,12 +770,16 @@
 
     <section class="layout-right">
       <div class="panel content-panel">
-        <div class="panel-header">
-          <div class="panel-title">Video Feed</div>
-          <div class="tag">CNA Live Stream</div>
+        <div class="panel-header news-channel-header">
+          <button class="channel-nav-btn" id="channelPrev" aria-label="Previous channel">&lt;</button>
+          <div class="channel-title-wrap">
+            <div class="panel-title" id="newsChannelTitle">Channel News Asia</div>
+          </div>
+          <button class="channel-nav-btn" id="channelNext" aria-label="Next channel">&gt;</button>
         </div>
         <div class="video-shell">
           <video id="liveVideo" autoplay muted playsinline controls></video>
+          <iframe id="liveNewsEmbed" class="live-news-embed" src="about:blank" title="Live news channel" allow="autoplay; encrypted-media; picture-in-picture; storage-access" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen loading="lazy"></iframe>
           <div class="video-overlay">
             <div class="video-top"></div>
             <div class="video-bottom"></div>
@@ -838,29 +888,77 @@
     }
 
     function initVideo() {
-      const video = document.getElementById("liveVideo");
-      if (!video) return;
+      const hlsVideo = document.getElementById("liveVideo");
+      const embed = document.getElementById("liveNewsEmbed");
+      const prevBtn = document.getElementById("channelPrev");
+      const nextBtn = document.getElementById("channelNext");
+      const titleEl = document.getElementById("newsChannelTitle");
+      if (!hlsVideo || !embed || !prevBtn || !nextBtn || !titleEl) return;
 
-      if (video.canPlayType("application/vnd.apple.mpegurl")) {
-        video.src = VIDEO_URL;
-        return;
+      let hls = null;
+
+      const channels = [
+        { name: "Channel News Asia", type: "hls", url: VIDEO_URL },
+        { name: "Bloomberg", type: "youtube", videoId: "iEpJwprxDdk" },
+        { name: "SkyNews", type: "youtube", videoId: "uvviIF4725I" },
+        { name: "Euronews", type: "youtube", videoId: "pykpO5kQJ98" },
+        { name: "DW", type: "youtube", videoId: "LuKwFajn37U" },
+        { name: "CNBC", type: "youtube", videoId: "9NyxcX3rhQs" },
+        { name: "CNN", type: "youtube", videoId: "w_Ma8oQLmSM" },
+        { name: "France 24", type: "youtube", videoId: "u9foWyMSETk" },
+        { name: "AlArabiya", type: "youtube", videoId: "n7eQejkXbnM" },
+        { name: "AlJazeera", type: "youtube", videoId: "gCNeDWCI0vo" }
+      ];
+
+      function destroyHls() {
+        if (hls) {
+          hls.destroy();
+          hls = null;
+        }
+        hlsVideo.pause();
+        hlsVideo.removeAttribute("src");
+        hlsVideo.load();
       }
 
-      if (window.Hls && Hls.isSupported()) {
-        const hls = new Hls({
-          enableWorker: true,
-          lowLatencyMode: true,
-          backBufferLength: 30
-        });
-        hls.loadSource(VIDEO_URL);
-        hls.attachMedia(video);
-        return;
+      function showChannel(index) {
+        const channel = channels[(index + channels.length) % channels.length];
+        currentIndex = (index + channels.length) % channels.length;
+        titleEl.textContent = channel.name;
+
+        if (channel.type === "hls") {
+          embed.style.display = "none";
+          embed.src = "about:blank";
+          hlsVideo.style.display = "block";
+          destroyHls();
+
+          if (hlsVideo.canPlayType("application/vnd.apple.mpegurl")) {
+            hlsVideo.src = channel.url;
+          } else if (window.Hls && Hls.isSupported()) {
+            hls = new Hls({
+              enableWorker: true,
+              lowLatencyMode: true,
+              backBufferLength: 30
+            });
+            hls.loadSource(channel.url);
+            hls.attachMedia(hlsVideo);
+          } else {
+            const fallback = document.createElement("div");
+            fallback.className = "error-box";
+            fallback.textContent = "HLS playback is not supported by this browser.";
+            hlsVideo.replaceWith(fallback);
+          }
+        } else {
+          destroyHls();
+          hlsVideo.style.display = "none";
+          embed.style.display = "block";
+          embed.src = `https://www.youtube.com/embed/${channel.videoId}?autoplay=1&mute=1&controls=1&modestbranding=1&playsinline=1&rel=0&enablejsapi=1&origin=${window.location.origin}`;
+        }
       }
 
-      const fallback = document.createElement("div");
-      fallback.className = "error-box";
-      fallback.textContent = "HLS playback is not supported by this browser.";
-      video.replaceWith(fallback);
+      let currentIndex = 0;
+      prevBtn.addEventListener("click", () => showChannel(currentIndex - 1));
+      nextBtn.addEventListener("click", () => showChannel(currentIndex + 1));
+      showChannel(0);
     }
 
     function initWebcams() {
