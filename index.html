@@ -59,7 +59,7 @@
       height: 600px;
       padding: 14px;
       display: grid;
-      grid-template-columns: repeat(3, 1fr);
+      grid-template-columns: 1fr 1.2fr 0.8fr;
       grid-template-rows: 62px 1fr 42px;
       gap: 12px;
     }
@@ -161,10 +161,16 @@
     }
 
     .layout-left,
-    .layout-center,
+    .layout-center {
+      min-height: 0;
+      display: grid;
+    }
+
     .layout-right {
       min-height: 0;
       display: grid;
+      grid-template-rows: 0.62fr 0.38fr;
+      gap: 12px;
     }
 
     .content-panel {
@@ -173,6 +179,7 @@
       min-height: 0;
       gap: 10px;
       padding: 12px;
+      overflow: hidden;
     }
 
     .bottom-news {
@@ -430,6 +437,134 @@
       background: linear-gradient(180deg, rgba(0,0,0,0.18), rgba(0,0,0,0.02) 35%, rgba(0,0,0,0.18));
     }
 
+    .ai-panel .panel-header {
+      min-height: 30px;
+      padding-bottom: 4px;
+      border-bottom: 1px solid rgba(67,243,255,0.10);
+      flex: 0 0 auto;
+    }
+
+    .panel-data-badge {
+      padding: 4px 8px;
+      border-radius: 999px;
+      border: 1px solid rgba(87,255,167,0.22);
+      background: rgba(87,255,167,0.08);
+      color: var(--green);
+      font-size: 10px;
+      font-weight: 800;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      display: inline-flex;
+      align-items: center;
+    }
+
+    .panel-subnote {
+      color: var(--muted);
+      font-size: 11px;
+      line-height: 1;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      max-width: 210px;
+    }
+
+    .ai-list {
+      position: relative;
+      flex: 1 1 auto;
+      min-height: 0;
+      height: 100%;
+      overflow: hidden;
+      display: block;
+      padding: 2px 0 0 0;
+    }
+
+    .ai-list::-webkit-scrollbar {
+      width: 0;
+      height: 0;
+    }
+
+    .ai-list::-webkit-scrollbar-track {
+      background: transparent;
+    }
+
+    .ai-list::-webkit-scrollbar-thumb {
+      background: transparent;
+    }
+
+    .ai-item {
+      padding: 12px 13px;
+      margin-bottom: 0;
+      border: 1px solid rgba(67,243,255,0.14);
+      border-radius: 12px;
+      background: linear-gradient(180deg, rgba(11,23,35,0.99), rgba(8,16,26,0.97));
+      overflow: hidden;
+      box-shadow: inset 0 1px 0 rgba(255,255,255,0.03);
+      display: none;
+      height: 100%;
+    }
+
+    .ai-item.active {
+      display: block;
+    }
+
+    .ai-source {
+      color: #a7c1d7;
+      font-size: 10px;
+      letter-spacing: 0.05em;
+      text-transform: uppercase;
+      margin-bottom: 8px;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .ai-title {
+      display: -webkit-box;
+      -webkit-line-clamp: 4;
+      -webkit-box-orient: vertical;
+      overflow: hidden;
+      color: #f7fcff;
+      text-decoration: none;
+      font-size: 13px;
+      line-height: 1.4;
+      font-weight: 700;
+      margin-bottom: 8px;
+    }
+
+    .ai-title:hover {
+      color: var(--cyan);
+    }
+
+    .ai-meta {
+      color: #90aac2;
+      font-size: 10px;
+      line-height: 1.25;
+    }
+
+    .ai-tag {
+      padding: 2px 6px;
+      border-radius: 999px;
+      border: 1px solid rgba(234,179,8,0.25);
+      background: rgba(234,179,8,0.12);
+      color: #eab308;
+      font-size: 9px;
+      font-weight: 700;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+    }
+
+    .ai-helper {
+      flex: 0 0 auto;
+      color: var(--muted);
+      font-size: 11px;
+      line-height: 1.2;
+      margin-top: -2px;
+      margin-bottom: 2px;
+    }
+
     .video-top,
     .video-bottom {
       display: flex;
@@ -472,27 +607,20 @@
       mask-image: linear-gradient(90deg, transparent 0%, #000 5%, #000 95%, transparent 100%);
     }
 
-    .news-ticker-marquee {
-      display: inline-flex;
-      align-items: center;
-      gap: 48px;
-      min-width: max-content;
+    .news-ticker-track {
+      display: inline-block;
+      padding-left: 60%;
+      white-space: nowrap;
       will-change: transform;
       animation: ticker 88s linear infinite;
-    }
-
-    .news-ticker-copy {
-      display: inline-block;
-      white-space: nowrap;
       color: #d7ebfb;
       font-size: 13px;
       letter-spacing: 0.02em;
-      flex: 0 0 auto;
     }
 
     @keyframes ticker {
       from { transform: translateX(0); }
-      to { transform: translateX(calc(-50% - 24px)); }
+      to { transform: translateX(-100%); }
     }
 
     .error-box {
@@ -608,16 +736,48 @@
           </div>
         </div>
       </div>
+
+      <div class="panel content-panel ai-panel" style="min-height:0;">
+        <div class="panel-header">
+          <div class="panel-header-left">
+            <span class="panel-title">AI/ML</span>
+            <span class="panel-subnote">Auto-rotating every 3s</span>
+          </div>
+          <span class="panel-data-badge">Live</span>
+        </div>
+        <div class="ai-list" id="aiList">
+          <div class="ai-item">
+            <div class="ai-source">AI News <span class="ai-tag">Cyber</span></div>
+            <a class="ai-title" href="https://news.google.com/rss/articles/CBMijwFBVV95cUxPQkVJRG9GVWY3TTVxMFZXRE5nQUxoUy1mNlp0Mkg2T1d4dVF2Y2psWnNwXzBiWnNmSldUenJsT1dUNnJXNnEwd3F2Sy1icFRwVnEzMUtTYlRfRDZySHRMZVdNMG1XSFJmaXNZUGpPSXZpdWhLNWdtbWY1WGZkSU5hblJuTGJNY1VZQTMwYnlxdw?oc=5" target="_blank" rel="noopener">Anthropic keeps latest AI tool out of public’s hands for fear of enabling widespread hacking</a>
+            <div class="ai-meta">12 hours ago</div>
+          </div>
+
+          <div class="ai-item">
+            <div class="ai-source">AI News <span class="ai-tag" style="color:#22c55e;border-color:#22c55e40;background:#22c55e20;">Tech</span></div>
+            <a class="ai-title" href="https://news.google.com/rss/articles/CBMieEFVX3lxTE15NE12LXdLZ0psWW1aeWRQZEh0MF9Vam1SSGJRcGIteXhaRGMySXNvSndydHlnVHJQTnJhY0hUTms5U2swa3JPR2NhQl9pREZVR1lQTDRxNlZQN092cFkyNGhsOFhsRjV2Zi14NXhSYy1MRWEwM3pzMQ?oc=5" target="_blank" rel="noopener">What should we take from Anthropic’s terrifying new report on Mythos?</a>
+            <div class="ai-meta">11 hours ago</div>
+          </div>
+
+          <div class="ai-item">
+            <div class="ai-source">ArXiv AI</div>
+            <a class="ai-title" href="https://arxiv.org/abs/2604.06375" target="_blank" rel="noopener">SymptomWise: A Deterministic Reasoning Layer for Reliable and Efficient AI Systems</a>
+            <div class="ai-meta">48 minutes ago</div>
+          </div>
+
+          <div class="ai-item">
+            <div class="ai-source">MIT Tech Review <span class="ai-tag" style="color:#3b82f6;border-color:#3b82f640;background:#3b82f620;">Tech</span></div>
+            <a class="ai-title" href="https://www.technologyreview.com/2026/04/08/1135398/mustafa-suleyman-ai-future/" target="_blank" rel="noopener">Mustafa Suleyman: AI development won’t hit a wall anytime soon—here’s why</a>
+            <div class="ai-meta">15 hours ago</div>
+          </div>
+        </div>
+      </div>
     </section>
 
     <section class="bottom-news">
       <div class="panel news-ticker-panel">
         <div class="news-ticker-label">Cyber News</div>
         <div class="news-ticker-window">
-          <div class="news-ticker-marquee" id="tickerMarquee">
-            <div class="news-ticker-copy" id="tickerTrackA">Loading cybersecurity headlines…</div>
-            <div class="news-ticker-copy" id="tickerTrackB">Loading cybersecurity headlines…</div>
-          </div>
+          <div class="news-ticker-track" id="tickerTrack">Loading cybersecurity headlines…</div>
         </div>
       </div>
     </section>
@@ -639,8 +799,7 @@
     }
 
     async function fetchNews() {
-      const tickerA = document.getElementById("tickerTrackA");
-      const tickerB = document.getElementById("tickerTrackB");
+      const ticker = document.getElementById("tickerTrack");
       const proxies = [
         `https://api.rss2json.com/v1/api.json?rss_url=${encodeURIComponent(RSS_URL)}`,
         `https://api.allorigins.win/raw?url=${encodeURIComponent(RSS_URL)}`,
@@ -673,11 +832,9 @@
       }
 
       const headlines = items.map(item => item.title).filter(Boolean);
-      const tickerText = headlines.length
-        ? (headlines.join("  •  ") + "  •  ")
-        : "Feed unavailable · check RSS access or CORS proxy availability  •  ";
-      tickerA.textContent = tickerText;
-      tickerB.textContent = tickerText;
+      ticker.textContent = headlines.length
+        ? (headlines.join("  •  ") + "  •  " + headlines.join("  •  ") + "  •  ")
+        : "Feed unavailable · check RSS access or CORS proxy availability";
     }
 
     function initVideo() {
@@ -813,9 +970,52 @@
       applySet(activeRegion);
     }
 
+    function initAiRotator() {
+      const list = document.getElementById("aiList");
+      if (!list) return;
+      const items = [...list.querySelectorAll(".ai-item")];
+      if (!items.length) return;
+
+      let index = 0;
+      const showItem = nextIndex => {
+        items.forEach((item, i) => item.classList.toggle("active", i === nextIndex));
+      };
+
+      showItem(index);
+
+      if (items.length > 1) {
+        setInterval(() => {
+          index = (index + 1) % items.length;
+          showItem(index);
+        }, 3000);
+      }
+    }
+
+
+    function initAiRotator() {
+      const list = document.getElementById("aiList");
+      if (!list) return;
+      const items = [...list.querySelectorAll(".ai-item")];
+      if (!items.length) return;
+
+      let current = 0;
+      function show(index) {
+        items.forEach((item, i) => item.classList.toggle("active", i === index));
+      }
+
+      show(current);
+      if (items.length === 1) return;
+
+      setInterval(() => {
+        current = (current + 1) % items.length;
+        show(current);
+      }, 3000);
+    }
+
     updateClock();
     setInterval(updateClock, 1000);
     initWebcams();
+    initAiRotator();
     fetchNews();
     initVideo();
   </script>
