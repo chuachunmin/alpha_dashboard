@@ -2,21 +2,28 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="viewport" content="width=1760, initial-scale=1.0" />
+  <meta name="color-scheme" content="dark" />
   <title>SST Dashboard</title>
-  <script src="https://cdn.jsdelivr.net/npm/hls.js@latest"></script>
+  <script defer src="https://cdn.jsdelivr.net/npm/hls.js@latest"></script>
   <style>
     :root {
-      --bg: #071018;
-      --panel: rgba(10, 22, 34, 0.94);
+      --bg-1: #08111b;
+      --bg-2: #04090f;
+      --panel-top: rgba(12, 24, 38, 0.95);
+      --panel-bottom: rgba(7, 14, 24, 0.95);
       --border: rgba(74, 214, 255, 0.22);
+      --border-strong: rgba(67, 243, 255, 0.3);
       --cyan: #43f3ff;
+      --cyan-soft: rgba(67, 243, 255, 0.08);
       --green: #57ffa7;
       --red: #ff5b8f;
       --text: #e8f4ff;
       --muted: #8ba6be;
       --grid: rgba(67, 243, 255, 0.08);
       --shadow: 0 0 0 1px rgba(67,243,255,0.05), 0 16px 40px rgba(0,0,0,0.45), inset 0 0 40px rgba(67,243,255,0.03);
+      --radius: 18px;
+      --radius-sm: 14px;
     }
 
     * { box-sizing: border-box; }
@@ -30,7 +37,7 @@
       background:
         radial-gradient(circle at 15% 20%, rgba(67,243,255,0.07), transparent 22%),
         radial-gradient(circle at 80% 15%, rgba(87,255,167,0.06), transparent 24%),
-        linear-gradient(180deg, #08111b 0%, #04090f 100%);
+        linear-gradient(180deg, var(--bg-1) 0%, var(--bg-2) 100%);
       color: var(--text);
       font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
     }
@@ -58,12 +65,12 @@
     }
 
     .panel {
-      background: linear-gradient(180deg, rgba(12,24,38,0.95), rgba(7,14,24,0.95));
-      border: 1px solid var(--border);
-      box-shadow: var(--shadow);
-      border-radius: 18px;
       position: relative;
       overflow: hidden;
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      background: linear-gradient(180deg, var(--panel-top), var(--panel-bottom));
+      box-shadow: var(--shadow);
     }
 
     .topbar {
@@ -79,53 +86,50 @@
       align-items: center;
       justify-content: flex-start;
       gap: 14px;
-      padding: 6px 18px;
-      min-width: 0;
       height: 100%;
+      padding: 6px 18px;
     }
 
     .logo-sst {
       width: 120px;
-      height: auto;
       max-height: 40px;
-      object-fit: contain;
       display: block;
+      object-fit: contain;
       flex: 0 0 auto;
     }
 
     .logo-divider {
       width: 2px;
       height: 34px;
-      background: rgba(255,255,255,0.95);
       border-radius: 999px;
+      background: rgba(255,255,255,0.95);
       box-shadow: 0 0 10px rgba(255,255,255,0.12);
       flex: 0 0 auto;
     }
 
     .logo-alpha {
       width: 180px;
-      height: auto;
       max-height: 44px;
-      object-fit: contain;
       display: block;
+      object-fit: contain;
       flex: 0 0 auto;
     }
 
     .time-card {
-      padding: 8px 16px;
       display: flex;
       flex-direction: column;
       justify-content: center;
+      padding: 8px 16px;
       min-width: 0;
     }
 
     .label {
+      margin-bottom: 6px;
       color: var(--muted);
       font-size: 11px;
-      text-transform: uppercase;
-      letter-spacing: 0.12em;
-      margin-bottom: 6px;
       line-height: 1;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
     }
 
     .value {
@@ -145,10 +149,19 @@
       text-overflow: ellipsis;
     }
 
-    .layout-left, .layout-center, .layout-right {
+    .layout-left,
+    .layout-center,
+    .layout-right {
       min-height: 0;
       display: grid;
-      grid-template-rows: 1fr;
+    }
+
+    .content-panel {
+      display: flex;
+      flex-direction: column;
+      min-height: 0;
+      gap: 10px;
+      padding: 12px;
     }
 
     .bottom-news {
@@ -156,19 +169,12 @@
       min-height: 0;
     }
 
-    .content-panel {
-      padding: 12px;
-      display: flex;
-      flex-direction: column;
-      min-height: 0;
-      gap: 10px;
-    }
-
     .panel-header {
       display: flex;
       align-items: center;
       justify-content: space-between;
       gap: 12px;
+      min-height: 26px;
     }
 
     .panel-header-left {
@@ -186,12 +192,12 @@
     }
 
     .tag {
-      font-size: 10px;
       padding: 6px 9px;
+      border: 1px solid var(--border-strong);
       border-radius: 999px;
-      border: 1px solid rgba(67,243,255,0.3);
+      background: var(--cyan-soft);
       color: var(--cyan);
-      background: rgba(67,243,255,0.08);
+      font-size: 10px;
       letter-spacing: 0.1em;
       text-transform: uppercase;
       white-space: nowrap;
@@ -204,12 +210,12 @@
     }
 
     .panel-info-btn,
-    .webcam-view-btn,
-    .webcam-region-btn {
+    .webcam-region-btn,
+    .webcam-view-btn {
       border: 1px solid rgba(67,243,255,0.18);
-      background: rgba(6, 16, 26, 0.95);
-      color: #d9efff;
       border-radius: 10px;
+      background: rgba(6,16,26,0.95);
+      color: #d9efff;
       cursor: pointer;
       transition: 0.18s ease;
     }
@@ -217,10 +223,10 @@
     .panel-info-btn {
       width: 20px;
       height: 20px;
+      padding: 0;
+      border-radius: 50%;
       font-size: 12px;
       line-height: 1;
-      border-radius: 50%;
-      padding: 0;
     }
 
     .panel-info-wrapper:hover .panel-info-tooltip {
@@ -231,48 +237,49 @@
 
     .panel-info-tooltip {
       position: absolute;
-      left: 0;
       top: calc(100% + 8px);
+      left: 0;
+      z-index: 20;
       width: 250px;
       padding: 10px 12px;
-      border-radius: 12px;
-      background: rgba(6, 16, 26, 0.98);
       border: 1px solid rgba(67,243,255,0.18);
+      border-radius: 12px;
+      background: rgba(6,16,26,0.98);
+      box-shadow: 0 10px 30px rgba(0,0,0,0.35);
       color: #c3daed;
       font-size: 11px;
       line-height: 1.4;
-      box-shadow: 0 10px 30px rgba(0,0,0,0.35);
       opacity: 0;
       transform: translateY(4px);
       pointer-events: none;
-      z-index: 20;
     }
 
     .panel-live-count {
+      padding: 5px 8px;
+      border: 1px solid rgba(87,255,167,0.2);
+      border-radius: 999px;
+      background: rgba(87,255,167,0.08);
+      color: var(--green);
       font-size: 11px;
       font-weight: 800;
-      color: var(--green);
-      padding: 5px 8px;
-      border-radius: 999px;
-      border: 1px solid rgba(87,255,167,0.2);
-      background: rgba(87,255,167,0.08);
     }
 
     .webcam-toolbar {
       display: flex;
-      justify-content: space-between;
-      align-items: center;
-      gap: 8px;
       flex-wrap: wrap;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
     }
 
     .webcam-toolbar-group {
       display: flex;
-      gap: 6px;
       flex-wrap: wrap;
+      gap: 6px;
     }
 
-    .webcam-region-btn, .webcam-view-btn {
+    .webcam-region-btn,
+    .webcam-view-btn {
       padding: 6px 8px;
       font-size: 10px;
       font-weight: 700;
@@ -283,17 +290,17 @@
     .webcam-view-btn {
       width: 30px;
       height: 30px;
+      padding: 0;
       display: grid;
       place-items: center;
-      padding: 0;
     }
 
     .webcam-region-btn.active,
     .webcam-view-btn.active,
     .panel-info-btn:hover {
-      color: #051019;
-      background: var(--cyan);
       border-color: rgba(67,243,255,0.45);
+      background: var(--cyan);
+      color: #051019;
     }
 
     .webcam-content {
@@ -320,38 +327,51 @@
 
     .webcam-cell {
       position: relative;
-      border-radius: 14px;
+      min-height: 0;
       overflow: hidden;
       border: 1px solid rgba(67,243,255,0.14);
+      border-radius: var(--radius-sm);
       background: #02060b;
-      min-height: 0;
+    }
+
+    .webcam-crop {
+      position: absolute;
+      inset: 0;
+      overflow: hidden;
+      background: #000;
     }
 
     .webcam-iframe {
-      width: 100%;
-      height: 100%;
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      width: 116%;
+      height: 116%;
       border: 0;
       display: block;
       background: #000;
+      transform: translate(-50%, -50%) scale(1.06);
+      transform-origin: center center;
+      pointer-events: none;
     }
 
     .webcam-cell-label {
       position: absolute;
       left: 10px;
       bottom: 10px;
+      z-index: 2;
       display: inline-flex;
       align-items: center;
       gap: 7px;
       padding: 6px 9px;
+      border: 1px solid rgba(255,255,255,0.1);
       border-radius: 999px;
       background: rgba(6,16,26,0.82);
-      border: 1px solid rgba(255,255,255,0.1);
+      backdrop-filter: blur(6px);
+      color: white;
       font-size: 10px;
       font-weight: 800;
       letter-spacing: 0.1em;
-      color: white;
-      backdrop-filter: blur(6px);
-      z-index: 2;
     }
 
     .webcam-live-dot {
@@ -360,16 +380,17 @@
       border-radius: 50%;
       background: var(--red);
       box-shadow: 0 0 10px rgba(255,91,143,0.8);
+      flex: 0 0 auto;
     }
 
     .map-wrap {
       position: relative;
       flex: 1;
       min-height: 0;
-      border-radius: 18px;
       overflow: hidden;
-      background: #050b12;
       border: 1px solid rgba(67,243,255,0.12);
+      border-radius: var(--radius);
+      background: #050b12;
     }
 
     .threat-iframe {
@@ -385,9 +406,9 @@
       position: relative;
       flex: 1;
       min-height: 0;
-      border-radius: 18px;
       overflow: hidden;
       border: 1px solid rgba(67,243,255,0.12);
+      border-radius: var(--radius);
       background: #000;
       display: flex;
       align-items: center;
@@ -411,17 +432,17 @@
       background: linear-gradient(180deg, rgba(0,0,0,0.18), rgba(0,0,0,0.02) 35%, rgba(0,0,0,0.18));
     }
 
-    .video-top, .video-bottom {
+    .video-top,
+    .video-bottom {
       display: flex;
-      justify-content: flex-end;
       align-items: center;
+      justify-content: flex-end;
       padding: 12px;
-      gap: 10px;
     }
 
     .caption {
-      font-size: 13px;
       color: white;
+      font-size: 13px;
       font-weight: 700;
       letter-spacing: 0.04em;
       text-shadow: 0 2px 14px rgba(0,0,0,0.35);
@@ -437,37 +458,37 @@
     }
 
     .news-ticker-label {
-      flex: none;
+      flex: 0 0 auto;
+      padding: 7px 10px;
+      border: 1px solid rgba(67,243,255,0.24);
+      border-radius: 999px;
+      background: rgba(67,243,255,0.08);
+      color: var(--cyan);
       font-size: 11px;
       font-weight: 800;
       letter-spacing: 0.12em;
       text-transform: uppercase;
-      color: var(--cyan);
-      padding: 7px 10px;
-      border-radius: 999px;
-      border: 1px solid rgba(67,243,255,0.24);
-      background: rgba(67,243,255,0.08);
     }
 
     .news-ticker-window {
       position: relative;
       flex: 1;
-      overflow: hidden;
+      min-width: 0;
       height: 100%;
       display: flex;
       align-items: center;
+      overflow: hidden;
       mask-image: linear-gradient(90deg, transparent 0%, #000 5%, #000 95%, transparent 100%);
-      min-width: 0;
     }
 
     .news-ticker-track {
       display: inline-block;
+      padding-left: 100%;
       white-space: nowrap;
       will-change: transform;
-      animation: ticker 85s linear infinite;
-      padding-left: 100%;
-      font-size: 13px;
+      animation: ticker 95s linear infinite;
       color: #d7ebfb;
+      font-size: 13px;
       letter-spacing: 0.02em;
     }
 
@@ -479,15 +500,14 @@
     .error-box {
       display: grid;
       place-items: center;
-      flex: 1;
       min-height: 0;
-      color: var(--muted);
-      font-size: 13px;
+      padding: 16px;
       border: 1px dashed rgba(67,243,255,0.15);
       border-radius: 14px;
-      background: rgba(7, 14, 24, 0.65);
+      background: rgba(7,14,24,0.65);
+      color: var(--muted);
+      font-size: 13px;
       text-align: center;
-      padding: 16px;
     }
   </style>
 </head>
@@ -513,7 +533,7 @@
             <span class="panel-title">Live Webcams</span>
             <div class="panel-info-wrapper">
               <button class="panel-info-btn" aria-label="Show methodology info">?</button>
-              <div class="panel-info-tooltip"><strong>Live Webcams</strong> Live feeds from geopolitically significant locations worldwide. These are embedded YouTube live streams and may still be subject to source-side embed restrictions.</div>
+              <div class="panel-info-tooltip"><strong>Live Webcams</strong> Live feeds from geopolitically significant locations worldwide: conflict zones, capital cities, border crossings, and strategic chokepoints. Streams sourced from YouTube and public networks.</div>
             </div>
             <span class="panel-live-count">4</span>
           </div>
@@ -526,6 +546,8 @@
             <button class="webcam-region-btn" data-region="middle-east">MIDEAST</button>
             <button class="webcam-region-btn" data-region="europe">EUROPE</button>
             <button class="webcam-region-btn" data-region="americas">AMERICAS</button>
+            <button class="webcam-region-btn" data-region="asia">ASIA</button>
+            <button class="webcam-region-btn" data-region="space">SPACE</button>
           </div>
           <div class="webcam-toolbar-group">
             <button class="webcam-view-btn active" data-mode="grid" title="Grid view">
@@ -537,23 +559,34 @@
           </div>
         </div>
 
-        <div class="webcam-content" id="live-webcamsContent">
-          <div class="webcam-grid">
-            <div class="webcam-cell selected" data-region="middle-east">
-              <iframe class="webcam-iframe" src="https://www.youtube-nocookie.com/embed/e34xb-Fbl0U?autoplay=1&mute=1&controls=0&modestbranding=1&playsinline=1&rel=0" title="Jerusalem live webcam" allow="autoplay; encrypted-media; picture-in-picture; fullscreen" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen loading="lazy"></iframe>
-              <div class="webcam-cell-label"><span class="webcam-live-dot"></span><span class="webcam-city">JERUSALEM</span></div>
-            </div>
-            <div class="webcam-cell" data-region="iran">
-              <iframe class="webcam-iframe" src="https://www.youtube-nocookie.com/embed/-zGuR1qVKrU?autoplay=1&mute=1&controls=0&modestbranding=1&playsinline=1&rel=0" title="Tehran live webcam" allow="autoplay; encrypted-media; picture-in-picture; fullscreen" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen loading="lazy"></iframe>
+        <div class="webcam-content">
+          <div class="webcam-grid" id="webcamGrid">
+            <div class="webcam-cell selected" data-region="iran">
+              <div class="webcam-crop">
+                <iframe class="webcam-iframe" src="https://www.youtube-nocookie.com/embed/-zGuR1qVKrU?autoplay=1&mute=1&controls=0&modestbranding=1&playsinline=1&rel=0" title="Tehran live webcam" allow="autoplay; encrypted-media; picture-in-picture; fullscreen" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen loading="lazy"></iframe>
+              </div>
               <div class="webcam-cell-label"><span class="webcam-live-dot"></span><span class="webcam-city">TEHRAN</span></div>
             </div>
-            <div class="webcam-cell" data-region="europe">
-              <iframe class="webcam-iframe" src="https://www.youtube-nocookie.com/embed/-Q7FuPINDjA?autoplay=1&mute=1&controls=0&modestbranding=1&playsinline=1&rel=0" title="Kyiv live webcam" allow="autoplay; encrypted-media; picture-in-picture; fullscreen" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen loading="lazy"></iframe>
-              <div class="webcam-cell-label"><span class="webcam-live-dot"></span><span class="webcam-city">KYIV</span></div>
+
+            <div class="webcam-cell" data-region="middle-east">
+              <div class="webcam-crop">
+                <iframe class="webcam-iframe" src="https://www.youtube-nocookie.com/embed/gmtlJ_m2r5A?autoplay=1&mute=1&controls=0&modestbranding=1&playsinline=1&rel=0" title="Tel Aviv live webcam" allow="autoplay; encrypted-media; picture-in-picture; fullscreen" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen loading="lazy"></iframe>
+              </div>
+              <div class="webcam-cell-label"><span class="webcam-live-dot"></span><span class="webcam-city">TEL AVIV</span></div>
             </div>
-            <div class="webcam-cell" data-region="americas">
-              <iframe class="webcam-iframe" src="https://www.youtube-nocookie.com/embed/1wV9lLe14aU?autoplay=1&mute=1&controls=0&modestbranding=1&playsinline=1&rel=0" title="Washington DC live webcam" allow="autoplay; encrypted-media; picture-in-picture; fullscreen" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen loading="lazy"></iframe>
-              <div class="webcam-cell-label"><span class="webcam-live-dot"></span><span class="webcam-city">WASHINGTON DC</span></div>
+
+            <div class="webcam-cell" data-region="middle-east">
+              <div class="webcam-crop">
+                <iframe class="webcam-iframe" src="https://www.youtube-nocookie.com/embed/fIurYTprwzg?autoplay=1&mute=1&controls=0&modestbranding=1&playsinline=1&rel=0" title="Jerusalem live webcam" allow="autoplay; encrypted-media; picture-in-picture; fullscreen" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen loading="lazy"></iframe>
+              </div>
+              <div class="webcam-cell-label"><span class="webcam-live-dot"></span><span class="webcam-city">JERUSALEM</span></div>
+            </div>
+
+            <div class="webcam-cell" data-region="middle-east">
+              <div class="webcam-crop">
+                <iframe class="webcam-iframe" src="https://www.youtube-nocookie.com/embed/FGUKbzulB_Y?autoplay=1&mute=1&controls=0&modestbranding=1&playsinline=1&rel=0" title="Middle East live webcam" allow="autoplay; encrypted-media; picture-in-picture; fullscreen" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen loading="lazy"></iframe>
+              </div>
+              <div class="webcam-cell-label"><span class="webcam-live-dot"></span><span class="webcam-city">MIDDLE EAST</span></div>
             </div>
           </div>
         </div>
@@ -576,17 +609,13 @@
       <div class="panel content-panel">
         <div class="panel-header">
           <div class="panel-title">Video Feed</div>
-          <div class="tag">Mediacorp live</div>
+          <div class="tag">CNA Live Stream</div>
         </div>
         <div class="video-shell">
           <video id="liveVideo" autoplay muted playsinline controls></video>
           <div class="video-overlay">
-            <div class="video-top">
-              <div class="caption">CNA live stream</div>
-            </div>
-            <div class="video-bottom">
-              <div class="caption">Aspect ratio preserved</div>
-            </div>
+            <div class="video-top"></div>
+            <div class="video-bottom"></div>
           </div>
         </div>
       </div>
@@ -603,32 +632,32 @@
   </div>
 
   <script>
-    const RSS_URL = 'https://0dayfans.com/feed.rss';
-    const VIDEO_URL = 'https://mediacorp-videosbclive.akamaized.net/8a496e61361c4079a0e16d8f09e79df9/ap-southeast-1/6057994443001/playlist.m3u8';
+    const RSS_URL = "https://0dayfans.com/feed.rss";
+    const VIDEO_URL = "https://mediacorp-videosbclive.akamaized.net/8a496e61361c4079a0e16d8f09e79df9/ap-southeast-1/6057994443001/playlist.m3u8";
 
     function updateClock() {
-      const formatter = new Intl.DateTimeFormat('en-SG', {
-        timeZone: 'Asia/Singapore',
-        hour: '2-digit',
-        minute: '2-digit',
-        second: '2-digit',
-        hour12: false,
+      const formatter = new Intl.DateTimeFormat("en-SG", {
+        timeZone: "Asia/Singapore",
+        hour: "2-digit",
+        minute: "2-digit",
+        second: "2-digit",
+        hour12: false
       });
-      document.getElementById('localClock').textContent = formatter.format(new Date());
+      document.getElementById("localClock").textContent = formatter.format(new Date());
     }
 
-    function stripHtml(html = '') {
-      const tmp = document.createElement('div');
-      tmp.innerHTML = html;
-      return (tmp.textContent || tmp.innerText || '').trim();
+    function stripHtml(input = "") {
+      const tmp = document.createElement("div");
+      tmp.innerHTML = input;
+      return (tmp.textContent || tmp.innerText || "").trim();
     }
 
     async function fetchNews() {
-      const ticker = document.getElementById('tickerTrack');
+      const ticker = document.getElementById("tickerTrack");
       const proxies = [
         `https://api.rss2json.com/v1/api.json?rss_url=${encodeURIComponent(RSS_URL)}`,
         `https://api.allorigins.win/raw?url=${encodeURIComponent(RSS_URL)}`,
-        `https://r.jina.ai/http://0dayfans.com/feed.rss`
+        "https://r.jina.ai/http://0dayfans.com/feed.rss"
       ];
 
       let items = [];
@@ -640,94 +669,104 @@
           if (!response.ok) throw new Error(`HTTP ${response.status}`);
           const text = await response.text();
 
-          if (endpoint.includes('rss2json')) {
+          if (endpoint.includes("rss2json")) {
             const data = JSON.parse(text);
-            items = (data.items || []).slice(0, 12).map(item => ({ title: item.title || '' }));
+            items = (data.items || []).slice(0, 12).map(item => ({ title: item.title || "" }));
           } else {
             const parser = new DOMParser();
-            const xml = parser.parseFromString(text, 'text/xml');
-            const rawItems = [...xml.querySelectorAll('item')].slice(0, 12);
-            items = rawItems.map(item => ({ title: item.querySelector('title')?.textContent || '' }));
+            const xml = parser.parseFromString(text, "text/xml");
+            const rawItems = [...xml.querySelectorAll("item")].slice(0, 12);
+            items = rawItems.map(item => ({ title: item.querySelector("title")?.textContent || "" }));
           }
 
           if (items.length) break;
-        } catch (err) {
-          lastError = err;
+        } catch (error) {
+          lastError = error;
         }
       }
 
       const headlines = items.map(item => item.title).filter(Boolean);
       ticker.textContent = headlines.length
-        ? (headlines.join('  •  ') + '  •  ' + headlines.join('  •  ') + '  •  ')
-        : ('Feed unavailable · check RSS access or CORS proxy availability · ' + String(lastError || ''));
+        ? `${headlines.join("  •  ")}  •  ${headlines.join("  •  ")}  •  `
+        : `Feed unavailable · check RSS access or CORS proxy availability · ${String(lastError || "")}`;
     }
 
     function initVideo() {
-      const video = document.getElementById('liveVideo');
-      if (video.canPlayType('application/vnd.apple.mpegurl')) {
+      const video = document.getElementById("liveVideo");
+      if (!video) return;
+
+      if (video.canPlayType("application/vnd.apple.mpegurl")) {
         video.src = VIDEO_URL;
-      } else if (window.Hls && Hls.isSupported()) {
+        return;
+      }
+
+      if (window.Hls && Hls.isSupported()) {
         const hls = new Hls({
           enableWorker: true,
           lowLatencyMode: true,
-          backBufferLength: 30,
+          backBufferLength: 30
         });
         hls.loadSource(VIDEO_URL);
         hls.attachMedia(video);
-      } else {
-        const fallback = document.createElement('div');
-        fallback.className = 'error-box';
-        fallback.innerHTML = 'HLS playback is not supported by this browser.';
-        video.replaceWith(fallback);
+        return;
       }
+
+      const fallback = document.createElement("div");
+      fallback.className = "error-box";
+      fallback.textContent = "HLS playback is not supported by this browser.";
+      video.replaceWith(fallback);
     }
 
     function initWebcams() {
-      const regionButtons = [...document.querySelectorAll('.webcam-region-btn')];
-      const viewButtons = [...document.querySelectorAll('.webcam-view-btn')];
-      const cells = [...document.querySelectorAll('.webcam-cell')];
-      const grid = document.querySelector('.webcam-grid');
+      const grid = document.getElementById("webcamGrid");
+      if (!grid) return;
+
+      const cells = [...grid.querySelectorAll(".webcam-cell")];
+      const regionButtons = [...document.querySelectorAll(".webcam-region-btn")];
+      const viewButtons = [...document.querySelectorAll(".webcam-view-btn")];
+
+      const updateSelection = () => {
+        if (!grid.classList.contains("single-mode")) return;
+        const visible = cells.filter(cell => cell.style.display !== "none");
+        cells.forEach(cell => cell.classList.remove("selected"));
+        (visible[0] || cells[0])?.classList.add("selected");
+      };
 
       regionButtons.forEach(button => {
-        button.addEventListener('click', () => {
-          regionButtons.forEach(btn => btn.classList.remove('active'));
-          button.classList.add('active');
+        button.addEventListener("click", () => {
+          regionButtons.forEach(btn => btn.classList.remove("active"));
+          button.classList.add("active");
+
           const region = button.dataset.region;
           cells.forEach(cell => {
-            const matches = region === 'all' || cell.dataset.region === region;
-            cell.style.display = matches ? '' : 'none';
+            const matches = region === "all" || cell.dataset.region === region;
+            cell.style.display = matches ? "" : "none";
           });
 
-          if (grid.classList.contains('single-mode')) {
-            const firstVisible = cells.find(cell => cell.style.display !== 'none');
-            cells.forEach(cell => cell.classList.remove('selected'));
-            (firstVisible || cells[0])?.classList.add('selected');
-          }
+          updateSelection();
         });
       });
 
       viewButtons.forEach(button => {
-        button.addEventListener('click', () => {
-          viewButtons.forEach(btn => btn.classList.remove('active'));
-          button.classList.add('active');
-          const mode = button.dataset.mode;
-          if (mode === 'single') {
-            grid.classList.add('single-mode');
-            const firstVisible = cells.find(cell => cell.style.display !== 'none');
-            cells.forEach(cell => cell.classList.remove('selected'));
-            (firstVisible || cells[0])?.classList.add('selected');
+        button.addEventListener("click", () => {
+          viewButtons.forEach(btn => btn.classList.remove("active"));
+          button.classList.add("active");
+
+          if (button.dataset.mode === "single") {
+            grid.classList.add("single-mode");
+            updateSelection();
           } else {
-            grid.classList.remove('single-mode');
-            cells.forEach(cell => cell.classList.remove('selected'));
+            grid.classList.remove("single-mode");
+            cells.forEach(cell => cell.classList.remove("selected"));
           }
         });
       });
 
       cells.forEach(cell => {
-        cell.addEventListener('click', () => {
-          if (!grid.classList.contains('single-mode')) return;
-          cells.forEach(item => item.classList.remove('selected'));
-          cell.classList.add('selected');
+        cell.addEventListener("click", () => {
+          if (!grid.classList.contains("single-mode")) return;
+          cells.forEach(item => item.classList.remove("selected"));
+          cell.classList.add("selected");
         });
       });
     }
