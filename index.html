@@ -472,20 +472,27 @@
       mask-image: linear-gradient(90deg, transparent 0%, #000 5%, #000 95%, transparent 100%);
     }
 
-    .news-ticker-track {
-      display: inline-block;
-      padding-left: 60%;
-      white-space: nowrap;
+    .news-ticker-marquee {
+      display: inline-flex;
+      align-items: center;
+      gap: 48px;
+      min-width: max-content;
       will-change: transform;
       animation: ticker 88s linear infinite;
+    }
+
+    .news-ticker-copy {
+      display: inline-block;
+      white-space: nowrap;
       color: #d7ebfb;
       font-size: 13px;
       letter-spacing: 0.02em;
+      flex: 0 0 auto;
     }
 
     @keyframes ticker {
       from { transform: translateX(0); }
-      to { transform: translateX(-100%); }
+      to { transform: translateX(calc(-50% - 24px)); }
     }
 
     .error-box {
@@ -607,7 +614,10 @@
       <div class="panel news-ticker-panel">
         <div class="news-ticker-label">Cyber News</div>
         <div class="news-ticker-window">
-          <div class="news-ticker-track" id="tickerTrack">Loading cybersecurity headlines…</div>
+          <div class="news-ticker-marquee" id="tickerMarquee">
+            <div class="news-ticker-copy" id="tickerTrackA">Loading cybersecurity headlines…</div>
+            <div class="news-ticker-copy" id="tickerTrackB">Loading cybersecurity headlines…</div>
+          </div>
         </div>
       </div>
     </section>
@@ -629,7 +639,8 @@
     }
 
     async function fetchNews() {
-      const ticker = document.getElementById("tickerTrack");
+      const tickerA = document.getElementById("tickerTrackA");
+      const tickerB = document.getElementById("tickerTrackB");
       const proxies = [
         `https://api.rss2json.com/v1/api.json?rss_url=${encodeURIComponent(RSS_URL)}`,
         `https://api.allorigins.win/raw?url=${encodeURIComponent(RSS_URL)}`,
@@ -662,9 +673,11 @@
       }
 
       const headlines = items.map(item => item.title).filter(Boolean);
-      ticker.textContent = headlines.length
-        ? (headlines.join("  •  ") + "  •  " + headlines.join("  •  ") + "  •  ")
-        : "Feed unavailable · check RSS access or CORS proxy availability";
+      const tickerText = headlines.length
+        ? (headlines.join("  •  ") + "  •  ")
+        : "Feed unavailable · check RSS access or CORS proxy availability  •  ";
+      tickerA.textContent = tickerText;
+      tickerB.textContent = tickerText;
     }
 
     function initVideo() {
