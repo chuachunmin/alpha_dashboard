@@ -663,7 +663,7 @@
               <button class="panel-info-btn" aria-label="Show methodology info">?</button>
               <div class="panel-info-tooltip"><strong>Live Webcams</strong> Live feeds from geopolitically significant locations worldwide: conflict zones, capital cities, border crossings, and strategic chokepoints. Streams sourced from YouTube and public networks.</div>
             </div>
-            <span class="panel-live-count">4</span>
+            <span class="panel-live-count">27</span>
           </div>
         </div>
 
@@ -873,48 +873,52 @@
 
       const webcamSets = {
         all: [
-          { city: "JERUSALEM", title: "Jerusalem live webcam", src: "https://www.youtube.com/embed/e34xb-Fbl0U?autoplay=1&mute=1&controls=0&modestbranding=1&playsinline=1&rel=0&enablejsapi=1&origin=https://www.worldmonitor.app" },
-          { city: "TEHRAN", title: "Tehran live webcam", src: "https://www.youtube.com/embed/-zGuR1qVKrU?autoplay=1&mute=1&controls=0&modestbranding=1&playsinline=1&rel=0&enablejsapi=1&origin=https://www.worldmonitor.app" },
-          { city: "KYIV", title: "Kyiv live webcam", src: "https://www.youtube.com/embed/-Q7FuPINDjA?autoplay=1&mute=1&controls=0&modestbranding=1&playsinline=1&rel=0&enablejsapi=1&origin=https://www.worldmonitor.app" },
-          { city: "WASHINGTON DC", title: "Washington DC live webcam", src: "https://www.youtube.com/embed/1wV9lLe14aU?autoplay=1&mute=1&controls=0&modestbranding=1&playsinline=1&rel=0&enablejsapi=1&origin=https://www.worldmonitor.app" }
+          { city: "JERUSALEM", title: "Jerusalem live webcam", videoId: "e34xb-Fbl0U" },
+          { city: "TEHRAN", title: "Tehran live webcam", videoId: "-zGuR1qVKrU" },
+          { city: "KYIV", title: "Kyiv live webcam", videoId: "-Q7FuPINDjA" },
+          { city: "WASHINGTON DC", title: "Washington DC live webcam", videoId: "1wV9lLe14aU" }
         ],
         iran: [
-          { city: "TEHRAN", title: "Tehran live webcam", src: "https://www.youtube.com/embed/-zGuR1qVKrU?autoplay=1&mute=1&controls=0&modestbranding=1&playsinline=1&rel=0&enablejsapi=1&origin=https://www.worldmonitor.app" },
-          { city: "TEL AVIV", title: "Tel Aviv live webcam", src: "https://www.youtube.com/embed/gmtlJ_m2r5A?autoplay=1&mute=1&controls=0&modestbranding=1&playsinline=1&rel=0&enablejsapi=1&origin=https://www.worldmonitor.app" },
-          { city: "JERUSALEM", title: "Jerusalem live webcam", src: "https://www.youtube.com/embed/fIurYTprwzg?autoplay=1&mute=1&controls=0&modestbranding=1&playsinline=1&rel=0&enablejsapi=1&origin=https://www.worldmonitor.app" },
-          { city: "MIDDLE EAST", title: "Middle East live webcam", src: "https://www.youtube.com/embed/FGUKbzulB_Y?autoplay=1&mute=1&controls=0&modestbranding=1&playsinline=1&rel=0&enablejsapi=1&origin=https://www.worldmonitor.app" }
+          { city: "TEHRAN", title: "Tehran live webcam", videoId: "-zGuR1qVKrU" },
+          { city: "TEL AVIV", title: "Tel Aviv live webcam", videoId: "gmtlJ_m2r5A" },
+          { city: "JERUSALEM", title: "Jerusalem live webcam", videoId: "fIurYTprwzg" },
+          { city: "MIDDLE EAST", title: "Middle East live webcam", videoId: "FGUKbzulB_Y" }
         ],
         "middle-east": [
-          { city: "TEL AVIV", title: "Tel Aviv live webcam", src: "https://www.youtube.com/embed/gmtlJ_m2r5A?autoplay=1&mute=1&controls=0&modestbranding=1&playsinline=1&rel=0&enablejsapi=1&origin=https://www.worldmonitor.app" },
-          { city: "JERUSALEM", title: "Jerusalem live webcam", src: "https://www.youtube.com/embed/fIurYTprwzg?autoplay=1&mute=1&controls=0&modestbranding=1&playsinline=1&rel=0&enablejsapi=1&origin=https://www.worldmonitor.app" },
-          { city: "MIDDLE EAST", title: "Middle East live webcam", src: "https://www.youtube.com/embed/FGUKbzulB_Y?autoplay=1&mute=1&controls=0&modestbranding=1&playsinline=1&rel=0&enablejsapi=1&origin=https://www.worldmonitor.app" },
-          { city: "TEHRAN", title: "Tehran live webcam", src: "https://www.youtube.com/embed/-zGuR1qVKrU?autoplay=1&mute=1&controls=0&modestbranding=1&playsinline=1&rel=0&enablejsapi=1&origin=https://www.worldmonitor.app" }
+          { city: "JERUSALEM", title: "Jerusalem live webcam", videoId: "e34xb-Fbl0U" },
+          { city: "TEHRAN", title: "Tehran live webcam", videoId: "-zGuR1qVKrU" },
+          { city: "TEL AVIV", title: "Tel Aviv live webcam", videoId: "gmtlJ_m2r5A" },
+          { city: "MECCA", title: "Mecca live webcam", videoId: "Cm1v4bteXbI" }
         ],
         europe: [
-          { city: "KYIV", title: "Kyiv live webcam", src: "https://www.youtube.com/embed/-Q7FuPINDjA?autoplay=1&mute=1&controls=0&modestbranding=1&playsinline=1&rel=0&enablejsapi=1&origin=https://www.worldmonitor.app" },
-          { city: "LONDON", title: "London live webcam", src: "https://www.youtube.com/embed/AuGp4lMMbLg?autoplay=1&mute=1&controls=0&modestbranding=1&playsinline=1&rel=0&enablejsapi=1&origin=https://www.worldmonitor.app" },
-          { city: "PARIS", title: "Paris live webcam", src: "https://www.youtube.com/embed/46mWQ3D3dQ8?autoplay=1&mute=1&controls=0&modestbranding=1&playsinline=1&rel=0&enablejsapi=1&origin=https://www.worldmonitor.app" },
-          { city: "ROME", title: "Rome live webcam", src: "https://www.youtube.com/embed/WjOWwKc6LNs?autoplay=1&mute=1&controls=0&modestbranding=1&playsinline=1&rel=0&enablejsapi=1&origin=https://www.worldmonitor.app" }
+          { city: "KYIV", title: "Kyiv live webcam", videoId: "-Q7FuPINDjA" },
+          { city: "ODESSA", title: "Odessa live webcam", videoId: "e2gC37ILQmk" },
+          { city: "PARIS", title: "Paris live webcam", videoId: "OzYp4NRZlwQ" },
+          { city: "LONDON", title: "London live webcam", videoId: "Lxqcg1qt0XU" }
         ],
         americas: [
-          { city: "WASHINGTON DC", title: "Washington DC live webcam", src: "https://www.youtube.com/embed/1wV9lLe14aU?autoplay=1&mute=1&controls=0&modestbranding=1&playsinline=1&rel=0&enablejsapi=1&origin=https://www.worldmonitor.app" },
-          { city: "NEW YORK", title: "New York live webcam", src: "https://www.youtube.com/embed/AuGp4lMMbLg?autoplay=1&mute=1&controls=0&modestbranding=1&playsinline=1&rel=0&enablejsapi=1&origin=https://www.worldmonitor.app" },
-          { city: "PACIFICA", title: "Pacifica live webcam", src: "https://www.youtube.com/embed/Ge6yH7p5vw0?autoplay=1&mute=1&controls=0&modestbranding=1&playsinline=1&rel=0&enablejsapi=1&origin=https://www.worldmonitor.app" },
-          { city: "MARTHA'S VINEYARD", title: "Harbor live webcam", src: "https://www.youtube.com/embed/XstZqnv9S_s?autoplay=1&mute=1&controls=0&modestbranding=1&playsinline=1&rel=0&enablejsapi=1&origin=https://www.worldmonitor.app" }
+          { city: "WASHINGTON DC", title: "Washington DC live webcam", videoId: "1wV9lLe14aU" },
+          { city: "NEW YORK", title: "New York live webcam", videoId: "4qyZLflp-sI" },
+          { city: "LOS ANGELES", title: "Los Angeles live webcam", videoId: "EO_1LWqsCNE" },
+          { city: "MIAMI", title: "Miami live webcam", videoId: "5YCajRjvWCg" }
         ],
         asia: [
-          { city: "TOKYO", title: "Tokyo live webcam", src: "https://www.youtube.com/embed/KJHBkeCsa-E?autoplay=1&mute=1&controls=0&modestbranding=1&playsinline=1&rel=0&enablejsapi=1&origin=https://www.worldmonitor.app" },
-          { city: "TOKYO SKYTREE", title: "Tokyo live webcam", src: "https://www.youtube.com/embed/ihr9YSyEA_4?autoplay=1&mute=1&controls=0&modestbranding=1&playsinline=1&rel=0&enablejsapi=1&origin=https://www.worldmonitor.app" },
-          { city: "SINGAPORE", title: "Singapore live webcam", src: "https://www.youtube.com/embed/9cfkyMzanbc?autoplay=1&mute=1&controls=0&modestbranding=1&playsinline=1&rel=0&enablejsapi=1&origin=https://www.worldmonitor.app" },
-          { city: "SEOUL", title: "Seoul live webcam", src: "https://www.youtube.com/embed/QgsJr1vovH0?autoplay=1&mute=1&controls=0&modestbranding=1&playsinline=1&rel=0&enablejsapi=1&origin=https://www.worldmonitor.app" }
+          { city: "TAIPEI", title: "Taipei live webcam", videoId: "z_fY1pj1VBw" },
+          { city: "SHANGHAI", title: "Shanghai live webcam", videoId: "76EwqI5XZIc" },
+          { city: "TOKYO", title: "Tokyo live webcam", videoId: "_k-5U7IeK8g" },
+          { city: "SEOUL", title: "Seoul live webcam", videoId: "-JhoMGoAfFc" }
         ],
         space: [
-          { city: "ISS", title: "ISS live stream", src: "https://www.youtube.com/embed/sWasdbDVNvc?autoplay=1&mute=1&controls=0&modestbranding=1&playsinline=1&rel=0&enablejsapi=1&origin=https://www.worldmonitor.app" },
-          { city: "ISS VIEW", title: "ISS external camera", src: "https://www.youtube.com/embed/zPH5KtjJFaQ?autoplay=1&mute=1&controls=0&modestbranding=1&playsinline=1&rel=0&enablejsapi=1&origin=https://www.worldmonitor.app" },
-          { city: "EARTH FROM SPACE", title: "Earth from space live", src: "https://www.youtube.com/embed/fO9e9jnhYK8?autoplay=1&mute=1&controls=0&modestbranding=1&playsinline=1&rel=0&enablejsapi=1&origin=https://www.worldmonitor.app" },
-          { city: "ISS FEED 2", title: "ISS live stream", src: "https://www.youtube.com/embed/itdpuGHAcpg?autoplay=1&mute=1&controls=0&modestbranding=1&playsinline=1&rel=0&enablejsapi=1&origin=https://www.worldmonitor.app" }
+          { city: "ISS EARTH VIEW", title: "ISS Earth View", videoId: "vytmBNhc9ig" },
+          { city: "NASA TV", title: "NASA TV", videoId: "zPH5KtjJFaQ" },
+          { city: "SPACEX", title: "SpaceX live", videoId: "fO9e9jnhYK8" },
+          { city: "SPACE", title: "Space live", videoId: "fO9e9jnhYK8" }
         ]
       };
+
+      function buildWebcamEmbedUrl(videoId) {
+        return `https://www.youtube.com/embed/${videoId}?autoplay=1&mute=1&controls=0&modestbranding=1&playsinline=1&rel=0&enablejsapi=1&origin=${window.location.origin}`;
+      }
 
       function applySet(region) {
         const selected = webcamSets[region] || webcamSets.all;
@@ -922,7 +926,7 @@
           const iframe = cell.querySelector(".webcam-iframe");
           const label = cell.querySelector(".webcam-city");
           const item = selected[index] || selected[0];
-          iframe.src = item.src;
+          iframe.src = buildWebcamEmbedUrl(item.videoId);
           iframe.title = item.title;
           label.textContent = item.city;
           cell.style.display = "";
