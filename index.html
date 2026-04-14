@@ -742,7 +742,7 @@
 
     <section class="bottom-news">
       <div class="panel news-ticker-panel">
-        <div class="news-ticker-label">Cyber News</div>
+        <div class="news-ticker-label">Cybersecurity News</div>
         <div class="news-ticker-window">
           <div class="news-ticker-marquee" id="tickerMarquee">
             <div class="news-ticker-copy" id="tickerTrackA">Loading cybersecurity headlines…</div>
@@ -754,7 +754,12 @@
   </div>
 
   <script>
-    const RSS_URL = "https://news.google.com/rss/topics/CAAqJQgKIh9DQkFTRVFvSUwyMHZNREl5ZUY4U0JXVnVMVWRDS0FBUAE";
+    const CYBER_FEEDS = [
+      { name: "BleepingComputer", url: "https://www.bleepingcomputer.com/feed/" },
+      { name: "Ars Technica Security", url: "https://arstechnica.com/security/feed" },
+      { name: "Krebs on Security", url: "https://krebsonsecurity.com/feed/" },
+      { name: "The Hacker News", url: "https://feeds.feedburner.com/TheHackersNews" }
+    ];
     const VIDEO_URL = "https://mediacorp-videosbclive.akamaized.net/8a496e61361c4079a0e16d8f09e79df9/ap-southeast-1/6057994443001/playlist.m3u8";
     const FEED_REFRESH_MS = 300000;
     const AI_ROTATE_MS = 3000;
@@ -929,11 +934,28 @@
     }
 
     async function fetchNews() {
-      const items = await fetchFeed(RSS_URL, "Cyber News", 16);
-      const headlines = items.map(item => item.title).filter(Boolean);
+      const results = await Promise.all(CYBER_FEEDS.map(feed => fetchFeed(feed.url, feed.name, 10)));
+      const allItems = results.flat();
+
+      const seen = new Set();
+      const deduped = allItems.filter(item => {
+        const key = (item.title || "").toLowerCase();
+        if (!key || seen.has(key)) return false;
+        seen.add(key);
+        return true;
+      });
+
+      deduped.sort((a, b) => {
+        const da = new Date(a.pubDate).getTime() || 0;
+        const db = new Date(b.pubDate).getTime() || 0;
+        return db - da;
+      });
+
+      const headlines = deduped.slice(0, 24).map(item => item.title).filter(Boolean);
       const tickerText = headlines.length
         ? headlines.join("  •  ") + "  •  "
         : "Feed unavailable • check RSS access or CORS proxy availability •";
+
       updateTickerMarquee(tickerText);
       return headlines;
     }
